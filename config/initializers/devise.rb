@@ -251,6 +251,21 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+  
+  if ENV['OPENID_CONNECT_CLIENT_ID'].present?
+    config.omniauth :openid_connect,
+      :strategy_class => OmniAuth::Strategies::OpenIDConnect,
+      :name => :openid_connect,
+      :issuer => ENV['OPENID_CONNECT_ISSUER'],
+      :scope => [:openid, :email, :profile],
+      :discovery => true,
+      :client_options => {
+        identifier: ENV['OPENID_CONNECT_CLIENT_ID'],
+        secret: ENV['OPENID_CONNECT_CLIENT_SECRET'],
+        redirect_uri: ENV['OPENID_CONNECT_REDIRECT_URI']
+      }
+  end
+
   if ENV['GOOGLE_CLIENT_ID'].present?
     config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], skip_jwt: true
   end
