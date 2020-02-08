@@ -262,7 +262,10 @@ Devise.setup do |config|
       :client_options => {
         identifier: ENV['OPENID_CONNECT_CLIENT_ID'],
         secret: ENV['OPENID_CONNECT_CLIENT_SECRET'],
-        redirect_uri: ENV['OPENID_CONNECT_REDIRECT_URI']
+        redirect_uri: ActionDispatch::Http::URL.url_for(
+          protocol: ENV['FRAB_PROTOCOL'], host: ENV['FRAB_HOST'],
+          port: ENV['FRAB_PORT'], path: "/users/auth/openid_connect/callback"
+        )
       }
   end
 
